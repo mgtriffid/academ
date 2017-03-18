@@ -47,13 +47,32 @@ project(":desktop") {
 project(":core") {
     apply plugin: "java"
 
-
     dependencies {
+        compile project(":logic-client")
+        compile project(":network-client")
+        compile project(":network-common")
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
     }
 }
 
+project(":network-client") {
+    apply plugin: "java"
+    dependencies {
+        compile project(":network-common")
+    }
+}
+
+project(":logic-client") {
+    apply plugin: "java"
+    dependencies {
+        compile project(":network-client")
+    }
+}
+
+project(":network-common") {
+    apply plugin: "java"
+}
 tasks.eclipse.doLast {
     delete ".project"
 }
