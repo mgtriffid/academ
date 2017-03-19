@@ -1,4 +1,5 @@
 buildscript {
+    ext.kotlin_version = '1.1.1'
     repositories {
         mavenLocal()
         mavenCentral()
@@ -6,8 +7,10 @@ buildscript {
         jcenter()
     }
     dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
+apply plugin: 'kotlin'
 
 allprojects {
     apply plugin: "eclipse"
@@ -34,9 +37,9 @@ allprojects {
 project(":desktop") {
     apply plugin: "java"
 
-
     dependencies {
         compile project(":core")
+        compile project(":config")
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-controllers-desktop:$gdxVersion"
@@ -51,8 +54,10 @@ project(":core") {
         compile project(":logic-client")
         compile project(":network-client")
         compile project(":network-common")
+        compile project(":config")
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
+        compile group: 'org.tinylog', name: 'tinylog', version: '1.2'
     }
 }
 
@@ -60,6 +65,8 @@ project(":network-client") {
     apply plugin: "java"
     dependencies {
         compile project(":network-common")
+        compile project(":config")
+        compile group: 'org.tinylog', name: 'tinylog', version: '1.2'
     }
 }
 
@@ -67,6 +74,8 @@ project(":logic-client") {
     apply plugin: "java"
     dependencies {
         compile project(":network-client")
+        compile project(":config")
+        compile group: 'org.tinylog', name: 'tinylog', version: '1.2'
     }
 }
 
@@ -75,6 +84,8 @@ project(":server") {
     dependencies {
         compile project(":network-server")
         compile project(":logic-server")
+        compile project(":config")
+        compile group: 'org.tinylog', name: 'tinylog', version: '1.2'
     }
 }
 
@@ -82,6 +93,17 @@ project(":network-server") {
     apply plugin: "java"
     dependencies {
         compile project(":network-common")
+        compile project(":config")
+        compile group: 'org.tinylog', name: 'tinylog', version: '1.2'
+    }
+}
+
+project(":logic-server") {
+    apply plugin: "java"
+    dependencies {
+        compile project(":network-server")
+        compile project(":config")
+        compile group: 'org.tinylog', name: 'tinylog', version: '1.2'
     }
 }
 
@@ -89,9 +111,25 @@ project(":network-common") {
     apply plugin: "java"
     dependencies {
         compile project(":logic-common")
+        compile project(":config")
         compile group: "com.esotericsoftware", name: "kryonet", version: "2.22.0-RC1"
+        compile group: 'org.tinylog', name: 'tinylog', version: '1.2'
+    }
+}
+
+project(":logic-common") {
+    apply plugin: "java"
+    dependencies {
+        compile project(":config")
+        compile group: 'org.tinylog', name: 'tinylog', version: '1.2'
     }
 }
 tasks.eclipse.doLast {
     delete ".project"
+}
+repositories {
+    mavenCentral()
+}
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
 }

@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by mgtriffid on 19.03.17.
  */
-public class CommandsBuffer {
+public class ClientCommandsBuffer {
     public int lastTick() {
         return 0;
     }

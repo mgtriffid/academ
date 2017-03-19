@@ -7,4 +7,5 @@ include 'network-server'
 include 'network-client'
 include 'network-common'
 include 'graphics'
+include 'config'
 

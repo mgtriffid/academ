@@ -1,8 +1,9 @@
 package com.mgtriffid.academ.network.client;
 
 import com.esotericsoftware.kryonet.Client;
+import com.mgtriffid.academ.network.common.CommandsChannel;
 import com.mgtriffid.academ.network.common.Convert;
-import com.mgtriffid.academ.network.common.PlayerCommand;
+import com.mgtriffid.academ.network.common.commands.meta.EnterGameCommand;
 
 import java.io.IOException;
 
@@ -14,13 +15,13 @@ import static com.mgtriffid.academ.network.common.NetworkCommon.registerDtos;
 public class NetworkClient {
 
     private Client client;
-    private CommandsChannel commandsChannel = new CommandsChannel();
+    private CommandsChannel<ServerCommand> commandsChannel = new CommandsChannel<>();
 
-    public void sendCommands(PlayerCommand command) {
-        //client.sendUDP(Convert.toDto(command));
+    public void send(EnterGameCommand enterGameCommand) {
+        client.sendUDP(Convert.toDto(enterGameCommand));
     }
 
-    public CommandsChannel provideCommandsChannel() {
+    public CommandsChannel<ServerCommand> provideCommandsChannel() {
         return commandsChannel;
     }
 

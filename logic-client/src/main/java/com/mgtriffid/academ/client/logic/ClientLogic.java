@@ -1,22 +1,25 @@
 package com.mgtriffid.academ.client.logic;
 
 import com.mgtriffid.academ.logic.WorldState;
-import com.mgtriffid.academ.network.client.CommandsChannel;
+import com.mgtriffid.academ.network.client.NetworkClient;
 import com.mgtriffid.academ.network.common.ConnectionCommand;
 import com.mgtriffid.academ.network.common.Convert;
 import com.mgtriffid.academ.network.common.TransferredState;
+import com.mgtriffid.academ.network.common.commands.meta.EnterGameCommand;
+import org.pmw.tinylog.Logger;
 
 import static com.mgtriffid.academ.client.logic.ClientLogic.State.*;
 import static com.mgtriffid.academ.network.common.ConnectionCommand.Type.CONNECTION_ALLOWED;
 import static com.mgtriffid.academ.network.common.ConnectionCommand.Type.CONNECTION_PERMITTED;
+import static com.mgtriffid.academ.network.common.Convert.toDto;
 
 /**
  * Created by mgtriffid on 19.03.17.
  */
 public class ClientLogic {
+    private NetworkClient client;
     private State state;
-    private CommandsChannel commandsChannel;
-    private CommandsBuffer commandsBuffer = new CommandsBuffer();
+    private ClientCommandsBuffer clientCommandsBuffer = new ClientCommandsBuffer();
     private ClientWorldStates clientWorldStates = new ClientWorldStates();
 
     private int currentTick = -1;
@@ -27,8 +30,9 @@ public class ClientLogic {
     }
 
     private void doTick() {
+        Logger.info("State {}", state);
         if (state == CONNECTING) {
-            for (ConnectionCommand connectionCommand : commandsBuffer.getConnectionCommands()) {
+            for (ConnectionCommand connectionCommand : clientCommandsBuffer.getConnectionCommands()) {
                 if (connectionCommand.type == CONNECTION_ALLOWED) {
                     state = AWAITING_GAMESTATE;
                 }
@@ -38,8 +42,8 @@ public class ClientLogic {
             }
         }
         if (state == AWAITING_GAMESTATE) {
-            if (commandsBuffer.initialStateReceived()) {
-                TransferredState initialState = commandsBuffer.getInitialState();
+            if (clientCommandsBuffer.initialStateReceived()) {
+                TransferredState initialState = clientCommandsBuffer.getInitialState();
                 currentTick = initialState.getTick();
                 fillCurrentStateFrom(initialState);
                 state = BUFFERING;
@@ -60,7 +64,7 @@ public class ClientLogic {
     }
 
     private boolean enoughTicksToStartSimulation() {
-        return commandsBuffer.lastTick() > currentTick + 3;
+        return clientCommandsBuffer.lastTick() > currentTick + 3;
     }
 
     private void fillCurrentStateFrom(TransferredState initialState) {
@@ -68,10 +72,11 @@ public class ClientLogic {
     }
 
     private void consumeServerCommands() {
-        commandsBuffer.addAllCommands(commandsChannel.fetchCommands());
+        clientCommandsBuffer.addAllCommands(client.provideCommandsChannel().fetchCommands());
     }
 
-    public ClientLogic() {
+    public ClientLogic(NetworkClient client) {
+        this.client = client;
         state = IDLE;
     }
 
@@ -84,11 +89,7 @@ public class ClientLogic {
     }
 
     private void sendEnterGameRequest() {
-
-    }
-
-    public void setCommandsChannel(CommandsChannel commandsChannel) {
-        this.commandsChannel = commandsChannel;
+        client.send(new EnterGameCommand());
     }
 
     enum State {
