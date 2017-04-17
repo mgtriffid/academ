@@ -9,11 +9,11 @@ import com.mgtriffid.academ.client.logic.ClientLogic;
 /**
  * Created by mgtriffid on 19.03.17.
  */
-public class Renderer {
+public class Graphics {
     private SpriteBatch batch;
     private Texture img;
 
-    Renderer() {
+    Graphics() {
         batch = new SpriteBatch();
         img = new Texture("badlogic.jpg");
     }

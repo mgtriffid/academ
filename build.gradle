@@ -104,6 +104,7 @@ project(":logic-server") {
         compile project(":network-server")
         compile project(":config")
         compile group: 'org.tinylog', name: 'tinylog', version: '1.2'
+        compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
     }
 }
 
@@ -122,6 +123,8 @@ project(":logic-common") {
     dependencies {
         compile project(":config")
         compile group: 'org.tinylog', name: 'tinylog', version: '1.2'
+        compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
+        compile group: 'com.google.guava', name: 'guava', version: '21.0'
     }
 }
 tasks.eclipse.doLast {

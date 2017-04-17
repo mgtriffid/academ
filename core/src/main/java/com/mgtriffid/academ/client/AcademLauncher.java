@@ -2,25 +2,25 @@ package com.mgtriffid.academ.client;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.mgtriffid.academ.client.logic.ClientLogic;
-import com.mgtriffid.academ.logic.LoopOverseer;
+import com.mgtriffid.academ.logic.Ticks;
 import com.mgtriffid.academ.network.client.NetworkClient;
 
 public class AcademLauncher extends ApplicationAdapter {
-	private Renderer renderer;
+	private Graphics graphics;
 	private NetworkClient client;
 	private ClientLogic logic;
-    private LoopOverseer overseer;
+    private Ticks ticks;
     private GameInput input;
 
     @Override
     public void create() {
-        renderer = new Renderer();
+        graphics = new Graphics();
         client = new NetworkClient();
         client.start();
         logic = new ClientLogic(client);
-        overseer = new LoopOverseer();
+        ticks = new Ticks();
         input = new GameInput();
-        overseer.start();
+        ticks.start();
         logic.start();
     }
 
@@ -30,17 +30,17 @@ public class AcademLauncher extends ApplicationAdapter {
     @Override
     public void render() {
         input.collect();
-        while (overseer.needUpdate()) {
+        while (ticks.needUpdate()) {
 //            client.send(input.playerCommand());
             logic.tick();
-            overseer.tick();
+            ticks.tick();
         }
-        renderer.render(logic, overseer.alpha());
+        graphics.render(logic, ticks.alpha());
     }
 
     @Override
     public void dispose() {
-        renderer.dispose();
+        graphics.dispose();
     }
 
 }

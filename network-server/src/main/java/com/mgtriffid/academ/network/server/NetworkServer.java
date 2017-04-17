@@ -1,8 +1,10 @@
 package com.mgtriffid.academ.network.server;
 
 import com.esotericsoftware.kryonet.Server;
-import com.mgtriffid.academ.network.common.CommandsChannel;
-import com.mgtriffid.academ.network.common.commands.ClientCommand;
+import com.mgtriffid.academ.logic.WorldState;
+import com.mgtriffid.academ.network.common.Convert;
+import com.mgtriffid.academ.network.common.commands.ConnectionCommand;
+import com.mgtriffid.academ.network.common.dto.ConnectionCommandDto;
 
 import java.io.IOException;
 
@@ -12,7 +14,7 @@ import static com.mgtriffid.academ.network.common.NetworkCommon.registerDtos;
  * Created by mgtriffid on 19.03.17.
  */
 public class NetworkServer {
-    CommandsChannel<ClientCommand> commandsChannel = new CommandsChannel<>();
+    ServerCommandsChannel commandsChannel = new ServerCommandsChannel();
 
     Server server;
 
@@ -28,7 +30,17 @@ public class NetworkServer {
 
     }
 
-    public CommandsChannel<ClientCommand> provideCommandsChannel() {
+    public ServerCommandsChannel provideCommandsChannel() {
         return commandsChannel;
+    }
+
+    public void sendState(int id, int tick, WorldState state) {
+        server.sendToUDP(id, Convert.toDto(tick, state));
+    }
+
+    public void sendConnectionAllowed(Integer id) {
+        ConnectionCommandDto commandDto = new ConnectionCommandDto();
+        commandDto.setType(ConnectionCommandDto.Type.CONNECTION_ALLOWED);
+        server.sendToUDP(id, commandDto);
     }
 }

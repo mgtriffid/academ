@@ -1,9 +1,8 @@
 package com.mgtriffid.academ.server;
 
-import com.mgtriffid.academ.logic.LoopOverseer;
+import com.mgtriffid.academ.logic.Ticks;
 import com.mgtriffid.academ.network.server.NetworkServer;
 import com.mgtriffid.academ.server.logic.ServerLogic;
-import org.pmw.tinylog.Logger;
 
 import java.io.IOException;
 
@@ -13,7 +12,7 @@ import java.io.IOException;
 public class GameServer {
     NetworkServer server;
     ServerLogic logic;
-    LoopOverseer overseer;
+    Ticks overseer;
 
     public static void main(String[] args) throws IOException, InterruptedException {
         new GameServer().start();
@@ -22,7 +21,7 @@ public class GameServer {
     GameServer() {
         server = new NetworkServer();
         logic = new ServerLogic(server);
-        overseer = new LoopOverseer();
+        overseer = new Ticks();
     }
 
     private void start() throws IOException, InterruptedException {

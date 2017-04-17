@@ -6,7 +6,7 @@ import org.pmw.tinylog.Logger;
 /**
  * Created by mgtriffid on 19.03.17.
  */
-public class LoopOverseer {
+public class Ticks {
     long currentTick;
     long nextTick;
     int tickLengthMillis = AcademConfig.getTickLengthMillis();
@@ -14,7 +14,6 @@ public class LoopOverseer {
     public boolean needUpdate() {
         long now = now();
         if (nextTick < now) {
-            Logger.info("Need update, nextTick = {}, now = {}", nextTick, now);
             return true;
         } else {
             return false;
@@ -23,7 +22,6 @@ public class LoopOverseer {
 
     public void tick() {
         nextTick += tickLengthMillis;
-        Logger.info("nextTick is {}", nextTick);
     }
 
     public void start() {

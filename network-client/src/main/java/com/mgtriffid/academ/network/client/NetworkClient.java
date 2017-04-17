@@ -1,7 +1,6 @@
 package com.mgtriffid.academ.network.client;
 
 import com.esotericsoftware.kryonet.Client;
-import com.mgtriffid.academ.network.common.CommandsChannel;
 import com.mgtriffid.academ.network.common.Convert;
 import com.mgtriffid.academ.network.common.commands.meta.EnterGameCommand;
 
@@ -15,13 +14,13 @@ import static com.mgtriffid.academ.network.common.NetworkCommon.registerDtos;
 public class NetworkClient {
 
     private Client client;
-    private CommandsChannel<ServerCommand> commandsChannel = new CommandsChannel<>();
+    private ClientCommandsChannel commandsChannel = new ClientCommandsChannel();
 
     public void send(EnterGameCommand enterGameCommand) {
         client.sendUDP(Convert.toDto(enterGameCommand));
     }
 
-    public CommandsChannel<ServerCommand> provideCommandsChannel() {
+    public ClientCommandsChannel provideCommandsChannel() {
         return commandsChannel;
     }
 

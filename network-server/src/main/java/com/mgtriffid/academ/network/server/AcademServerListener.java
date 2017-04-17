@@ -2,10 +2,8 @@ package com.mgtriffid.academ.network.server;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import com.mgtriffid.academ.network.common.CommandsChannel;
 import com.mgtriffid.academ.network.common.commands.ClientCommand;
 import com.mgtriffid.academ.network.common.dto.meta.EnterGameCommandDto;
-import org.pmw.tinylog.Logger;
 
 import static com.mgtriffid.academ.network.common.Convert.fromDto;
 
@@ -14,16 +12,16 @@ import static com.mgtriffid.academ.network.common.Convert.fromDto;
  */
 public class AcademServerListener extends Listener {
 
-    private final CommandsChannel<ClientCommand> commandsChannel;
+    private final ServerCommandsChannel commandsChannel;
 
-    public AcademServerListener(CommandsChannel<ClientCommand> commandsChannel) {
+    public AcademServerListener(ServerCommandsChannel commandsChannel) {
         this.commandsChannel = commandsChannel;
     }
 
     @Override
     public void received(Connection connection, Object object) {
         if (object instanceof EnterGameCommandDto) {
-            commandsChannel.push(fromDto((EnterGameCommandDto) object));
+            commandsChannel.push(fromDto((EnterGameCommandDto) object), connection.getID());
         }
         super.received(connection, object);
     }

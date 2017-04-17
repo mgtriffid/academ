@@ -2,15 +2,16 @@ package com.mgtriffid.academ.client.logic;
 
 import com.mgtriffid.academ.logic.WorldState;
 import com.mgtriffid.academ.network.client.NetworkClient;
-import com.mgtriffid.academ.network.common.ConnectionCommand;
+import com.mgtriffid.academ.network.common.commands.ConnectionCommand;
 import com.mgtriffid.academ.network.common.Convert;
 import com.mgtriffid.academ.network.common.TransferredState;
 import com.mgtriffid.academ.network.common.commands.meta.EnterGameCommand;
+import org.apache.commons.lang3.tuple.Pair;
 import org.pmw.tinylog.Logger;
 
 import static com.mgtriffid.academ.client.logic.ClientLogic.State.*;
-import static com.mgtriffid.academ.network.common.ConnectionCommand.Type.CONNECTION_ALLOWED;
-import static com.mgtriffid.academ.network.common.ConnectionCommand.Type.CONNECTION_PERMITTED;
+import static com.mgtriffid.academ.network.common.commands.ConnectionCommand.Type.CONNECTION_ALLOWED;
+import static com.mgtriffid.academ.network.common.commands.ConnectionCommand.Type.CONNECTION_PERMITTED;
 import static com.mgtriffid.academ.network.common.Convert.toDto;
 
 /**
@@ -43,9 +44,9 @@ public class ClientLogic {
         }
         if (state == AWAITING_GAMESTATE) {
             if (clientCommandsBuffer.initialStateReceived()) {
-                TransferredState initialState = clientCommandsBuffer.getInitialState();
-                currentTick = initialState.getTick();
-                fillCurrentStateFrom(initialState);
+                Pair<Integer, WorldState> tickAndState = clientCommandsBuffer.getInitialState();
+                currentTick = tickAndState.getLeft();
+                fillCurrentStateFrom(tickAndState.getRight());
                 state = BUFFERING;
             }
         }
@@ -64,15 +65,16 @@ public class ClientLogic {
     }
 
     private boolean enoughTicksToStartSimulation() {
-        return clientCommandsBuffer.lastTick() > currentTick + 3;
+        return clientCommandsBuffer.lastTick() > currentTick + 3; //TODO: make it smarter
     }
 
-    private void fillCurrentStateFrom(TransferredState initialState) {
-        clientWorldStates.put(currentTick % 256, Convert.toGameState(initialState));
+    private void fillCurrentStateFrom(WorldState state) {
+        clientWorldStates.put(currentTick % 256, (state));
     }
 
     private void consumeServerCommands() {
         clientCommandsBuffer.addAllCommands(client.provideCommandsChannel().fetchCommands());
+        clientCommandsBuffer.addAllStates(client.provideCommandsChannel().fetchStates());
     }
 
     public ClientLogic(NetworkClient client) {

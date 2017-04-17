@@ -104,3 +104,12 @@ gradle-app.setting
 ## OS Specific
 .DS_Store
 Thumbs.db
+/network-server/build/
+/server/build/
+/logic-common/build/
+/logic-server/build/
+/network-common/build/
+/network-client/build/
+/config/build/
+/graphics/build/
+/logic-client/build/

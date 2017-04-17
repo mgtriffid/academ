@@ -1,7 +1,12 @@
 package com.mgtriffid.academ.network.common;
 
 import com.mgtriffid.academ.logic.WorldState;
+import com.mgtriffid.academ.network.common.commands.ConnectionCommand;
+import com.mgtriffid.academ.network.common.commands.GameLogicCommands;
 import com.mgtriffid.academ.network.common.commands.meta.EnterGameCommand;
+import com.mgtriffid.academ.network.common.dto.ConnectionCommandDto;
+import com.mgtriffid.academ.network.common.dto.WorldStateDto;
+import com.mgtriffid.academ.network.common.dto.commands.GameLogicCommandsDto;
 import com.mgtriffid.academ.network.common.dto.meta.EnterGameCommandDto;
 
 /**
@@ -20,7 +25,19 @@ public class Convert {
         return new EnterGameCommand();
     }
 
-    public static WorldState toGameState(TransferredState initialState) {
-        return null;
+    public static ConnectionCommand fromDto(ConnectionCommandDto object) {
+        return new ConnectionCommand(object.getType().toRealType());
+    }
+
+    public static WorldStateDto toDto(int tick, WorldState state) {
+        return new WorldStateDto();
+    }
+
+    public static WorldState fromDto(WorldStateDto dto) {
+        return new WorldState();
+    }
+
+    public static GameLogicCommands fromDto(GameLogicCommandsDto commands) {
+        return null; //TODO
     }
 }
