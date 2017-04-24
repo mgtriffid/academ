@@ -1,6 +1,7 @@
 package com.mgtriffid.academ.server;
 
-import com.mgtriffid.academ.logic.Ticks;
+import com.mgtriffid.academ.config.AcademConfig;
+import com.mgtriffid.academ.logic.impl.SystemTicks;
 import com.mgtriffid.academ.network.server.NetworkServer;
 import com.mgtriffid.academ.server.logic.ServerLogic;
 
@@ -12,7 +13,7 @@ import java.io.IOException;
 public class GameServer {
     NetworkServer server;
     ServerLogic logic;
-    Ticks overseer;
+    SystemTicks overseer;
 
     public static void main(String[] args) throws IOException, InterruptedException {
         new GameServer().start();
@@ -21,12 +22,11 @@ public class GameServer {
     GameServer() {
         server = new NetworkServer();
         logic = new ServerLogic(server);
-        overseer = new Ticks();
+        overseer = new SystemTicks(AcademConfig.INSTANCE.getTickLengthMillis());
     }
 
     private void start() throws IOException, InterruptedException {
         server.start();
-        overseer.start();
         startLoop();
     }
 
