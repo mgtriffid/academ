@@ -12,7 +12,7 @@ public class ConnectionCommand {
 
     public enum Type {
         CONNECTION_ALLOWED,
-        CONNECTION_PERMITTED,
+        CONNECTION_NOT_ALLOWED,
         CONNECTION_REQUESTED
     }
 }

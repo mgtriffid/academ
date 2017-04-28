@@ -28,7 +28,7 @@ public class ConnectionCommandDto {
         CONNECTION_PERMITTED {
             @Override
             public ConnectionCommand.Type toRealType() {
-                return ConnectionCommand.Type.CONNECTION_PERMITTED;
+                return ConnectionCommand.Type.CONNECTION_NOT_ALLOWED;
             }
         },
         CONNECTION_REQUESTED {
@@ -44,7 +44,7 @@ public class ConnectionCommandDto {
             switch (type) {
                 case CONNECTION_ALLOWED:
                     return CONNECTION_ALLOWED;
-                case CONNECTION_PERMITTED:
+                case CONNECTION_NOT_ALLOWED:
                     return CONNECTION_PERMITTED;
                 case CONNECTION_REQUESTED:
                     return CONNECTION_REQUESTED;

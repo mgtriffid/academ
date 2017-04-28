@@ -6,7 +6,9 @@ import com.mgtriffid.academ.network.client.AcademClientListener;
 import com.mgtriffid.academ.network.client.ClientCommandsChannel;
 import com.mgtriffid.academ.network.client.NetworkClient;
 import com.mgtriffid.academ.network.common.Convert;
+import com.mgtriffid.academ.network.common.PlayerCommand;
 import com.mgtriffid.academ.network.common.commands.meta.EnterGameCommand;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -38,5 +40,10 @@ public class KryoNetworkClient implements NetworkClient {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void send(@NotNull PlayerCommand command) {
+//        TODO
     }
 }

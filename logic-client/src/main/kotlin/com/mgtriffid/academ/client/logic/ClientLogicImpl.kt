@@ -2,15 +2,12 @@ package com.mgtriffid.academ.client.logic
 
 import com.mgtriffid.academ.logic.WorldState
 import com.mgtriffid.academ.network.client.NetworkClient
-import com.mgtriffid.academ.network.common.commands.ConnectionCommand
 import com.mgtriffid.academ.network.common.commands.meta.EnterGameCommand
-import org.apache.commons.lang3.tuple.Pair
 import org.pmw.tinylog.Logger
 
 import com.mgtriffid.academ.client.logic.ClientLogicImpl.State.*
 import com.mgtriffid.academ.network.common.commands.ConnectionCommand.Type.CONNECTION_ALLOWED
-import com.mgtriffid.academ.network.common.commands.ConnectionCommand.Type.CONNECTION_PERMITTED
-import com.mgtriffid.academ.network.common.Convert.toDto
+import com.mgtriffid.academ.network.common.commands.ConnectionCommand.Type.CONNECTION_NOT_ALLOWED
 
 /**
  * Created by mgtriffid on 19.03.17.
@@ -20,6 +17,10 @@ class ClientLogicImpl(
         private val client: NetworkClient,
         private val clientCommandsBuffer: ClientCommandsBuffer
 ) : ClientLogic {
+    override fun state(): DrawableState {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     private var state: State? = null //TODO: nullability
     private val clientWorldStates = ClientWorldStates() //TODO: this should be probably injected
 
@@ -41,7 +42,7 @@ class ClientLogicImpl(
                 if (connectionCommand.type == CONNECTION_ALLOWED) {
                     state = AWAITING_GAMESTATE
                 }
-                if (connectionCommand.type == CONNECTION_PERMITTED) {
+                if (connectionCommand.type == CONNECTION_NOT_ALLOWED) {
                     //TODO: handle
                 }
             }

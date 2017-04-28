@@ -16,6 +16,7 @@ class SystemTicks (
         next += length
     }
 
+    //TODO: Think what will happen right after buffering. Ticks and alpha can be messed up.
     override fun alpha() = (1 - (next - now()).toFloat() / length.toFloat())
 
     override fun toNextTickMillis() = next - now()

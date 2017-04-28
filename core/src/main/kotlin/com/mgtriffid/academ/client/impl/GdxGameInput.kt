@@ -4,15 +4,16 @@ import com.mgtriffid.academ.client.logic.GameInput
 import com.mgtriffid.academ.network.common.PlayerCommand
 
 /**
- * Created by mgtriffid on 17.04.17.
+ * Gdx-based implementation of [GameInput].
+ *
+ * Uses LibGDX's built-in system to collect command based on input coming from devices.
  */
 class GdxGameInput : GameInput {
-    override fun collect() {
+    override fun snap() {
 
     }
 
-    override fun playerCommand() : PlayerCommand? {
+    override fun command() : PlayerCommand {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
 }
