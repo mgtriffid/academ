@@ -4,8 +4,8 @@ package com.mgtriffid.academ.client.logic
  * Created by mgtriffid on 29.04.17.
  */
 class RegulatedClientLogic(
-        val logic: ClientLogic,
-        val mode: GameMode
+        val mode: GameMode,
+        val logic: ClientLogic
 ) : ClientLogic by logic {
 
     override fun tick() {

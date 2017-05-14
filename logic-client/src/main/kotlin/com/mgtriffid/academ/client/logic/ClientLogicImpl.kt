@@ -12,6 +12,7 @@ import com.mgtriffid.academ.network.common.commands.ConnectionCommand.Type.CONNE
 /**
  * Created by mgtriffid on 19.03.17.
  */
+//TODO: mb throw away
 class ClientLogicImpl(
         private val input: GameInput,
         private val client: NetworkClient,
@@ -36,6 +37,7 @@ class ClientLogicImpl(
     }
 
     private fun doTick() {
+/*
         Logger.info("State {}", state)
         if (state == CONNECTING) {
             for (connectionCommand in clientCommandsBuffer.connectionCommands) {
@@ -63,6 +65,7 @@ class ClientLogicImpl(
             currentTick++
             clientWorldStates.put(currentTick, nextWorldState)
         }
+*/
     }
 
     override fun start() {
@@ -78,10 +81,10 @@ class ClientLogicImpl(
         client.send(EnterGameCommand())
     }
 
-    private fun enoughTicksToStartSimulation() = clientCommandsBuffer.lastTick() > currentTick + 3 //TODO: make it smarter
+//    private fun enoughTicksToStartSimulation() = clientCommandsBuffer.lastTick() > currentTick + 3 //TODO: make it smarter
 
     private fun consumeServerCommands() {
-        clientCommandsBuffer.consumeCommands()
+//        clientCommandsBuffer.consumeCommands()
     }
 
     private fun fillCurrentStateFrom(state: WorldState) {

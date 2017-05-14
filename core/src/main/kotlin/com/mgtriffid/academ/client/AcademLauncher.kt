@@ -4,28 +4,53 @@ import com.badlogic.gdx.ApplicationAdapter
 import com.mgtriffid.academ.client.impl.GameClientImpl
 import com.mgtriffid.academ.client.impl.GdxGameInput
 import com.mgtriffid.academ.client.impl.GdxGraphics
-import com.mgtriffid.academ.client.logic.ClientCommandsBuffer
-import com.mgtriffid.academ.client.logic.ClientLogicImpl
+import com.mgtriffid.academ.client.logic.*
 import com.mgtriffid.academ.config.AcademConfig
 import com.mgtriffid.academ.logic.impl.SystemTicks
+import com.mgtriffid.academ.client.logic.AcademClientListener
 import com.mgtriffid.academ.network.client.NetworkClient
-import com.mgtriffid.academ.network.client.impl.KryoNetworkClient
+import com.mgtriffid.academ.client.logic.impl.KryoNetworkClient
 
 class AcademLauncher : ApplicationAdapter() {
     lateinit var game: GameClientImpl
 
     override fun create() {
-        val network = KryoNetworkClient()
+        val (sink, source) = CommandsChannel.Smart(ClientCommandsChannel()).ends()
+        val network = KryoNetworkClient(
+                AcademClientListener(
+                        sink
+                )
+        )
+        val ticks = SystemTicks(
+                length = AcademConfig.tickLengthMillis
+        )
+        val buffer = ClientCommandsBuffer(
+                source = source
+        )
         game = GameClientImpl(
-                SystemTicks(
-                        AcademConfig.tickLengthMillis
+                ticks = ticks,
+                logic = RefreshingThingsClientLogic(
+                        { buffer.refresh() },
+                        logic = RegulatedClientLogic(
+                                mode = NetworkControlledGameMode(
+                                        //TODO: what to inject? Maybe buffer?
+                                ),
+                                logic = SimpleClientLogic(
+                                        state = SimpleUpdatableState(
+                                                world = WorldImpl(),
+                                                commands = NetworkCommands(
+                                                        buffer = buffer,
+                                                        ticks = ticks
+                                                )
+                                        ),
+                                        input = NetworkGameInput(
+                                                input = GdxGameInput(),
+                                                network = network
+                                        )
+                                )
+                        )
                 ),
-                ClientLogicImpl(
-                        GdxGameInput(),
-                        network,
-                        ClientCommandsBuffer(network)
-                ),
-                GdxGraphics()
+                graphics = GdxGraphics()
         )
         game.start()
     }

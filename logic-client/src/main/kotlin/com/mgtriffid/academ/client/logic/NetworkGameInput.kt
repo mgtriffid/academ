@@ -14,7 +14,9 @@ import com.mgtriffid.academ.network.client.NetworkClient
  */
 class NetworkGameInput(
         val input: GameInput,
-        val network: NetworkClient) : GameInput by input {
+        val network: NetworkClient
+) : GameInput by input {
+
     override fun snap() {
         input.snap()
         network.send(input.command())
